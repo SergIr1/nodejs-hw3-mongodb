@@ -10,7 +10,3 @@ export const middleware500 = (err, req, res, next) => {
     error: err.message,
   });
 };
-
-// console.log(typeof middleware404);
-
-// export default { middelware404 };
