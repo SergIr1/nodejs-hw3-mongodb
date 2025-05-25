@@ -2,13 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
-// import { getAllStudents, getStudentById } from './services/contacts.js';
-import {
-  getStudentByIdController,
-  getAllStudentsController,
-} from './controllers/contacts.js';
-import { middleware404, middleware500 } from './middlewares/middelware.js';
-// import mongoose from 'mongoose';
+import contactsRouter from './routers/contacts.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 const app = express();
 
@@ -32,13 +28,15 @@ export const setupServer = () => {
     response.json({ message: 'Hello World! My name is Serhii Karskyi' });
   });
 
-  app.get('/contacts', getAllStudentsController);
+  // app.get('/contacts', getAllContactsController);
 
-  app.get('/contacts/:contactId', getStudentByIdController);
+  // app.get('/contacts/:contactId', getContactByIdController);
 
-  app.use(middleware404);
+  app.use(contactsRouter);
 
-  app.use(middleware500);
+  app.use(notFoundHandler);
+
+  app.use(errorHandler);
 
   app.listen(PORT, (err) => {
     if (err) {

@@ -1,11 +1,25 @@
-import { StudentCollections } from '../models/contact.js';
+import { StudentCollections } from '../db/models/contact.js';
 
-export const getAllStudents = async () => {
-  const students = await StudentCollections.find();
-  return students;
+export const getAllContacts = async () => {
+  const contacts = await StudentCollections.find();
+  return contacts;
 };
 
-export const getStudentById = async (studentId) => {
-  const student = await StudentCollections.findById(studentId);
-  return student;
+export const getContactById = async (contactId) => {
+  const contact = await StudentCollections.findById(contactId);
+  return contact;
+};
+
+export const createContact = async (payload) => {
+  return await StudentCollections.create(payload);
+};
+
+export const updateContact = async (contactId, payload) => {
+  return await StudentCollections.findByIdAndUpdate(contactId, payload, {
+    new: true,
+  });
+};
+
+export const deleteContact = async (contactId) => {
+  return await StudentCollections.findByIdAndDelete(contactId);
 };

@@ -1,38 +1,100 @@
-import { getStudentById, getAllStudents } from '../services/contacts.js';
+import mongoose from 'mongoose';
+import {
+  getContactById,
+  getAllContacts,
+  createContact,
+  deleteContact,
+  updateContact,
+} from '../services/contacts.js';
+import createHttpError from 'http-errors';
 
-export const getStudentByIdController = async (req, res, next) => {
-  try {
-    const { contactId } = req.params;
+export const getContactByIdController = async (req, res, next) => {
+  // try {
+  const { contactId } = req.params;
 
-    // if (!mongoose.Types.ObjectId.isValid(studentId)) {
-    //   return res.status(400).json({ message: 'Invalid student id' });
-    // }
+  // throw new Error('Error');
 
-    const student = await getStudentById(contactId);
-
-    if (!student) {
-      return res.status(404).json({ message: 'Contact not found' });
-    }
-
-    res.status(200).json({
-      status: 200,
-      message: `Successfully found contact with id ${contactId}!`,
-      data: student,
-    });
-  } catch (error) {
-    if (error.name === 'CastError' && error.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Contact not found' });
-    }
-    next(error);
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    throw createHttpError(400, 'Invalid contact ID');
   }
+
+  const contact = await getContactById(contactId);
+
+  // if (!contact) {
+  //   res.status(404).json({ message: 'Contact not found' });
+  //   return;
+  // }
+
+  if (contact === null) {
+    // next(new Error('Contact not found'));
+    // return;
+    throw createHttpError(404, 'Contact not found');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: `Successfully found contact with id ${contactId}!`,
+    data: contact,
+  });
+  // } catch (error) {
+  //   if (error.name === 'CastError' && error.kind === 'ObjectId') {
+  //     return res.status(404).json({ message: 'Contact not found' });
+  //   }
+  //   next(error);
+  // }
 };
 
-export const getAllStudentsController = async (req, res) => {
-  const students = await getAllStudents();
+export const getAllContactsController = async (req, res, next) => {
+  const contacts = await getAllContacts();
 
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
-    data: students,
+    data: contacts,
   });
+};
+
+export const createContactsController = async (req, res) => {
+  const contact = await createContact(req.body);
+
+  console.log(contact);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created a contact!',
+    data: contact,
+  });
+};
+
+export const updateContactsController = async (req, res, next) => {
+  const { contactId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    throw createHttpError(400, 'Invalid contact ID');
+  }
+
+  const contact = await updateContact(contactId, req.body);
+
+  if (contact === null) {
+    throw createHttpError(404, 'Contact not found');
+    // next(createHttpError(404, 'Contact not found'));
+    // return;
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: contact,
+  });
+};
+
+export const deleteContactController = async (req, res) => {
+  const { contactId } = req.params;
+  const contact = await deleteContact(contactId);
+
+  if (contact === null) {
+    throw createHttpError(404, 'Contact not found');
+  }
+
+  res.status(204).end();
 };
