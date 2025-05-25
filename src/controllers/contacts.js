@@ -5,6 +5,7 @@ import {
   createContact,
   deleteContact,
   updateContact,
+  // replaceContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 
@@ -98,3 +99,26 @@ export const deleteContactController = async (req, res) => {
 
   res.status(204).end();
 };
+
+// ========================== Method PUT =====================================
+
+// export const replaceContactController = async (req, res) => {
+//   const { contactId } = req.params;
+//   const { value, updatedExisting } = await replaceContact(contactId, req.body);
+
+//   if (updatedExisting === true) {
+//     return res.json({
+//       status: 200,
+//       message: 'Student updated Successfully',
+//       data: value,
+//     });
+//   }
+
+//   res.status(201).json({
+//     status: 201,
+//     message: 'Successfully created a contact!',
+//     data: value,
+//   });
+// };
+
+// ========================== /Method PUT =====================================
