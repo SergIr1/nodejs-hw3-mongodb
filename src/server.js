@@ -2,15 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
-import contactsRouter from './routers/contacts.js';
-import { errorHandler } from './middlewares/errorHandler.js';
+// import {Serhii Karskyi} from serhiipraktic7@gmail.com;
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import contactsRouter from './routers/contacts.js';
 
 const app = express();
-
 const PORT = Number(getEnvVar('PORT', '3000'));
-
-// console.log(PORT);
 
 export const setupServer = () => {
   app.use(express.json());
@@ -24,11 +22,9 @@ export const setupServer = () => {
     }),
   );
 
-  app.get('/', (request, response) => {
-    response.json({ message: 'Hello World! My name is Serhii Karskyi' });
-  });
-
   // app.get('/contacts', getAllContactsController);
+
+  // Server started by Serhii Karskyi serhiipraktic7@gmail.com
 
   // app.get('/contacts/:contactId', getContactByIdController);
 
@@ -43,6 +39,6 @@ export const setupServer = () => {
       throw err;
     }
 
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running serhii karskiy on port ${PORT}`);
   });
 };
