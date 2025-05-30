@@ -24,7 +24,7 @@ export const setupServer = () => {
 
   // app.get('/contacts', getAllContactsController);
 
-  // Server started by Serhii Karskyi serhiipraktic7@gmail.com
+  // Server started by serhii karskyi serhiipraktic7@gmail.com
 
   // app.get('/contacts/:contactId', getContactByIdController);
 
