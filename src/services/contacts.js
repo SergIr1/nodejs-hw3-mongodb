@@ -1,8 +1,98 @@
 import { StudentCollections } from '../db/models/contact.js';
 
-export const getAllContacts = async () => {
-  const contacts = await StudentCollections.find();
-  return contacts;
+export const getAllContacts = async ({
+  page,
+  perPage,
+  sortBy,
+  sortOrder,
+  filter,
+}) => {
+  const skip = page > 0 ? (page - 1) * perPage : 0;
+
+  // ================================ Перший Варіант ================================
+
+  const contactQeury = StudentCollections.find(filter);
+
+  const [totalItems, contacts] = await Promise.all([
+    StudentCollections.countDocuments(filter),
+    contactQeury
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(perPage),
+    // await StudentCollections.find()
+    //   .sort({ [sortBy]: sortOrder })
+    //   .skip(skip)
+    //   .limit(perPage),
+  ]);
+
+  // ================================ /Перший Варіант ================================
+
+  // ================================ Second Варіант ================================
+
+  // let contactQury = StudentCollections.find();
+
+  // if (filter.isFavourite !== undefined) {
+  //   contactQury = contactQury.where('isFavourite').equals(filter.isFavourite);
+  // }
+
+  // if (filter.contactType !== undefined) {
+  //   contactQury = contactQury.where('contactType').equals(filter.contactType);
+  // }
+
+  // const countFilter = {};
+
+  // if (filter.isFavourite !== undefined) {
+  //   countFilter.isFavourite = filter.isFavourite;
+  // }
+
+  // if (filter.contactType !== undefined) {
+  //   countFilter.contactType = filter.contactType;
+  // }
+
+  // const [totalItems, contacts] = await Promise.all([
+  //   StudentCollections.countDocuments(countFilter),
+  //   contactQury
+  //     .sort({ [sortBy]: sortOrder })
+  //     .skip(skip)
+  //     .limit(perPage),
+  // ]);
+
+  // ================================ /Second Варіант ================================
+
+  // ================================ Варіант з ЧИСЛАМИ================================
+
+  // let contactQury = StudentCollections.find();
+
+  // if (typeof filter.minYear !== 'undefined') {
+  //   contactQury = contactQury.where('minYear').gte(filter.minYear);
+  // }
+
+  // if (typeof filter.maxYear !== 'undefined') {
+  //   contactQury = contactQury.where('maxYear').lte(filter.maxYear);
+  // }
+
+  // const [totalItems, contacts] = await Promise.all([
+  //   StudentCollections.countDocuments(contactQury),
+  //   contactQury
+  //     .sort({ [sortBy]: sortOrder })
+  //     .skip(skip)
+  //     .limit(perPage),
+  // ]);
+
+  // ================================ /Варіант з ЧИСЛАМИ================================
+
+  console.log({ totalItems, contacts });
+  const totalPages = Math.ceil(totalItems / perPage);
+
+  return {
+    contacts,
+    page,
+    perPage,
+    totalItems,
+    totalPages,
+    hasNextPage: totalPages > page,
+    hasPreviousPage: page > 1,
+  };
 };
 
 export const getContactById = async (contactId) => {

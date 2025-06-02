@@ -8,6 +8,9 @@ import {
   // replaceContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactByIdController = async (req, res, next) => {
   // try {
@@ -15,9 +18,9 @@ export const getContactByIdController = async (req, res, next) => {
 
   // throw new Error('Error');
 
-  if (!mongoose.Types.ObjectId.isValid(contactId)) {
-    throw createHttpError(400, 'Invalid contact ID');
-  }
+  // if (!mongoose.Types.ObjectId.isValid(contactId)) {
+  //   throw createHttpError(400, 'Invalid contact ID');
+  // }
 
   const contact = await getContactById(contactId);
 
@@ -50,7 +53,22 @@ export const rootController = async (request, response) => {
 };
 
 export const getAllContactsController = async (req, res, next) => {
-  const contacts = await getAllContacts();
+  console.log('query:', req.query);
+
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
+
+  console.log('parsed:', { page, perPage });
+  console.log('parsed:', { sortBy, sortOrder });
+
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
 
   res.status(200).json({
     status: 200,
