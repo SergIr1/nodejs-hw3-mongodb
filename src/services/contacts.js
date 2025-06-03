@@ -13,7 +13,7 @@ export const getAllContacts = async ({
 
   const contactQeury = StudentCollections.find(filter);
 
-  const [totalItems, contacts] = await Promise.all([
+  const [totalItems, data] = await Promise.all([
     StudentCollections.countDocuments(filter),
     contactQeury
       .sort({ [sortBy]: sortOrder })
@@ -81,11 +81,11 @@ export const getAllContacts = async ({
 
   // ================================ /Варіант з ЧИСЛАМИ================================
 
-  console.log({ totalItems, contacts });
+  console.log({ totalItems, data });
   const totalPages = Math.ceil(totalItems / perPage);
 
   return {
-    contacts,
+    data,
     page,
     perPage,
     totalItems,
