@@ -28,7 +28,7 @@ export const getAllContactsController = async (req, res, next) => {
     sortBy,
     sortOrder,
     filter,
-    ownerId: req.user.id,
+    userId: req.user.id,
   });
 
   res.status(200).json({
@@ -51,7 +51,7 @@ export const getContactByIdController = async (req, res, next) => {
     throw createHttpError(404, 'Contact not found');
   }
 
-  if (contact.ownerId.toString() !== req.user.id.toString()) {
+  if (contact.userId.toString() !== req.user.id.toString()) {
     // throw new createHttpError(403, 'Access denided for contact');
     throw createHttpError(404, 'Contact not found');
   }
@@ -68,7 +68,7 @@ export const rootController = async (request, response) => {
 };
 
 export const createContactsController = async (req, res) => {
-  const contact = await createContact({ ...req.body, ownerId: req.user.id });
+  const contact = await createContact({ ...req.body, userId: req.user.id });
 
   // console.log(contact);
 

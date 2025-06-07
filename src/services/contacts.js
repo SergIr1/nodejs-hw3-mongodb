@@ -6,7 +6,7 @@ export const getAllContacts = async ({
   sortBy,
   sortOrder,
   filter,
-  ownerId,
+  userId,
 }) => {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
@@ -32,7 +32,7 @@ export const getAllContacts = async ({
 
   const contactQury = StudentCollections.find();
 
-  contactQury.where('ownerId').equals(ownerId);
+  contactQury.where('userId').equals(userId);
 
   if (filter.isFavourite !== undefined) {
     contactQury.where('isFavourite').equals(filter.isFavourite);
