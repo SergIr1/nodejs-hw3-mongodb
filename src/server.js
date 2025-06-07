@@ -5,7 +5,9 @@ import { getEnvVar } from './utils/getEnvVar.js';
 // import {Serhii Karskyi} from serhiipraktic7@gmail.com;
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import contactsRouter from './routers/contacts.js';
+// import contactsRouter from './routers/contacts.js';
+import router from './routers/index.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = Number(getEnvVar('PORT', '3000'));
@@ -13,6 +15,7 @@ const PORT = Number(getEnvVar('PORT', '3000'));
 export const setupServer = () => {
   app.use(express.json());
   app.use(cors());
+  app.use(cookieParser());
 
   app.use(
     pino({
@@ -28,7 +31,7 @@ export const setupServer = () => {
 
   // app.get('/contacts/:contactId', getContactByIdController);
 
-  app.use(contactsRouter);
+  app.use(router);
 
   app.use(notFoundHandler);
 

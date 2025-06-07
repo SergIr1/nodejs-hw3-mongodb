@@ -26,7 +26,12 @@ const studentSchema = new Schema(
       enum: ['personal', 'home'],
       default: 'personal',
     },
+    ownerId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
   },
+
   {
     timestamps: true,
     versionKey: false,

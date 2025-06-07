@@ -5,62 +5,22 @@ import {
   createContact,
   deleteContact,
   updateContact,
-  // replaceContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
-export const getContactByIdController = async (req, res, next) => {
-  // try {
-  const { contactId } = req.params;
-
-  // throw new Error('Error');
-
-  // if (!mongoose.Types.ObjectId.isValid(contactId)) {
-  //   throw createHttpError(400, 'Invalid contact ID');
-  // }
-
-  const contact = await getContactById(contactId);
-
-  // if (!contact) {
-  //   res.status(404).json({ message: 'Contact not found' });
-  //   return;
-  // }
-
-  if (contact === null) {
-    // next(new Error('Contact not found'));
-    // return;
-    throw createHttpError(404, 'Contact not found');
-  }
-
-  res.status(200).json({
-    status: 200,
-    message: `Successfully found contact with id ${contactId}!`,
-    data: contact,
-  });
-  // } catch (error) {
-  //   if (error.name === 'CastError' && error.kind === 'ObjectId') {
-  //     return res.status(404).json({ message: 'Contact not found' });
-  //   }
-  //   next(error);
-  // }
-};
-
-export const rootController = async (request, response) => {
-  response.json({ message: `My name is Serhii Karskiy. Hello World!` });
-};
-
 export const getAllContactsController = async (req, res, next) => {
-  console.log('query:', req.query);
+  // console.log('query:', req.query);
+  console.log(req.user);
 
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
 
-  console.log('parsed:', { page, perPage });
-  console.log('parsed:', { sortBy, sortOrder });
+  // console.log('parsed:', { page, perPage });
+  // console.log('parsed:', { sortBy, sortOrder });
 
   const contacts = await getAllContacts({
     page,
@@ -68,6 +28,7 @@ export const getAllContactsController = async (req, res, next) => {
     sortBy,
     sortOrder,
     filter,
+    ownerId: req.user.id,
   });
 
   res.status(200).json({
@@ -77,10 +38,39 @@ export const getAllContactsController = async (req, res, next) => {
   });
 };
 
-export const createContactsController = async (req, res) => {
-  const contact = await createContact(req.body);
+export const getContactByIdController = async (req, res, next) => {
+  const { contactId } = req.params;
 
-  console.log(contact);
+  // if (!mongoose.Types.ObjectId.isValid(contactId)) {
+  //   throw createHttpError(400, 'Invalid contact ID');
+  // }
+
+  const contact = await getContactById(contactId);
+
+  if (contact === null) {
+    throw createHttpError(404, 'Contact not found');
+  }
+
+  if (contact.ownerId.toString() !== req.user.id.toString()) {
+    // throw new createHttpError(403, 'Access denided for contact');
+    throw createHttpError(404, 'Contact not found');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: `Successfully found contact with id ${contactId}!`,
+    data: contact,
+  });
+};
+
+export const rootController = async (request, response) => {
+  response.json({ message: `My name is Serhii Karskiy. Hello World!` });
+};
+
+export const createContactsController = async (req, res) => {
+  const contact = await createContact({ ...req.body, ownerId: req.user.id });
+
+  // console.log(contact);
 
   res.status(201).json({
     status: 201,

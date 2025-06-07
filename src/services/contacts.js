@@ -6,56 +6,59 @@ export const getAllContacts = async ({
   sortBy,
   sortOrder,
   filter,
+  ownerId,
 }) => {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
   // ================================ Перший Варіант ================================
 
-  const contactQeury = StudentCollections.find(filter);
+  // const contactQeury = StudentCollections.find(filter);
 
-  const [totalItems, data] = await Promise.all([
-    StudentCollections.countDocuments(filter),
-    contactQeury
-      .sort({ [sortBy]: sortOrder })
-      .skip(skip)
-      .limit(perPage),
-    // await StudentCollections.find()
-    //   .sort({ [sortBy]: sortOrder })
-    //   .skip(skip)
-    //   .limit(perPage),
-  ]);
+  // const [totalItems, data] = await Promise.all([
+  //   StudentCollections.countDocuments(filter),
+  //   contactQeury
+  //     .sort({ [sortBy]: sortOrder })
+  //     .skip(skip)
+  //     .limit(perPage),
+  //   // await StudentCollections.find()
+  //   //   .sort({ [sortBy]: sortOrder })
+  //   //   .skip(skip)
+  //   //   .limit(perPage),
+  // ]);
 
   // ================================ /Перший Варіант ================================
 
   // ================================ Second Варіант ================================
 
-  // let contactQury = StudentCollections.find();
+  const contactQury = StudentCollections.find();
 
-  // if (filter.isFavourite !== undefined) {
-  //   contactQury = contactQury.where('isFavourite').equals(filter.isFavourite);
-  // }
+  contactQury.where('ownerId').equals(ownerId);
 
-  // if (filter.contactType !== undefined) {
-  //   contactQury = contactQury.where('contactType').equals(filter.contactType);
-  // }
+  if (filter.isFavourite !== undefined) {
+    contactQury.where('isFavourite').equals(filter.isFavourite);
+  }
 
-  // const countFilter = {};
+  if (filter.contactType !== undefined) {
+    contactQury.where('contactType').equals(filter.contactType);
+  }
 
-  // if (filter.isFavourite !== undefined) {
-  //   countFilter.isFavourite = filter.isFavourite;
-  // }
+  const countFilter = {};
 
-  // if (filter.contactType !== undefined) {
-  //   countFilter.contactType = filter.contactType;
-  // }
+  if (filter.isFavourite !== undefined) {
+    countFilter.isFavourite = filter.isFavourite;
+  }
 
-  // const [totalItems, contacts] = await Promise.all([
-  //   StudentCollections.countDocuments(countFilter),
-  //   contactQury
-  //     .sort({ [sortBy]: sortOrder })
-  //     .skip(skip)
-  //     .limit(perPage),
-  // ]);
+  if (filter.contactType !== undefined) {
+    countFilter.contactType = filter.contactType;
+  }
+
+  const [totalItems, data] = await Promise.all([
+    StudentCollections.countDocuments(countFilter),
+    contactQury
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(perPage),
+  ]);
 
   // ================================ /Second Варіант ================================
 
@@ -81,7 +84,7 @@ export const getAllContacts = async ({
 
   // ================================ /Варіант з ЧИСЛАМИ================================
 
-  console.log({ totalItems, data });
+  // console.log({ totalItems, data });
   const totalPages = Math.ceil(totalItems / perPage);
 
   return {
