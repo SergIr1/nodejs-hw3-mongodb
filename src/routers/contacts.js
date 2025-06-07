@@ -4,7 +4,7 @@ import {
   deleteContactController,
   getAllContactsController,
   getContactByIdController,
-  rootController,
+  // rootController,
   //   replaceContactController,
   updateContactsController,
 } from '../controllers/contacts.js';
@@ -17,9 +17,9 @@ const router = Router();
 
 // router.use(authenticate);
 
-router.get('/', ctrlWrapper(getAllContactsController));
+// router.get('/', ctrlWrapper(rootController));
 
-router.get('/', ctrlWrapper(rootController));
+router.get('/', ctrlWrapper(getAllContactsController));
 
 router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdController));
 

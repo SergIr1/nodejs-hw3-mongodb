@@ -25,6 +25,10 @@ export const setupServer = () => {
     }),
   );
 
+  app.get('/', (request, response) => {
+    response.json({ message: 'Hello World! My name is Serhii Karskyi' });
+  });
+
   // app.get('/contacts', getAllContactsController);
 
   // Server started by serhii karskyi serhiipraktic7@gmail.com

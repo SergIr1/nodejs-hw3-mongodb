@@ -63,9 +63,9 @@ export const getContactByIdController = async (req, res, next) => {
   });
 };
 
-export const rootController = async (request, response) => {
-  response.json({ message: `My name is Serhii Karskiy. Hello World!` });
-};
+// export const rootController = async (request, response) => {
+//   response.json({ message: `My name is Serhii Karskiy. Hello World!` });
+// };
 
 export const createContactsController = async (req, res) => {
   const contact = await createContact({ ...req.body, userId: req.user.id });
