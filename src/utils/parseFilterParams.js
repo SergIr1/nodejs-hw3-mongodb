@@ -10,7 +10,7 @@ const parseFavourite = (value) => {
 };
 
 const parseContactType = (value) => {
-  const allowedTypes = ['personal', 'home'];
+  const allowedTypes = ['personal', 'home', 'work'];
 
   if (typeof value === 'undefined') {
     return undefined;

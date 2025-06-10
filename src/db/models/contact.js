@@ -23,11 +23,12 @@ const studentSchema = new Schema(
     contactType: {
       type: String,
       required: true,
-      enum: ['personal', 'home'],
+      enum: ['personal', 'home', 'work'],
       default: 'personal',
     },
     userId: {
       type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
   },

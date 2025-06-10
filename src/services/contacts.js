@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { StudentCollections } from '../db/models/contact.js';
 
 export const getAllContacts = async ({
@@ -30,9 +31,11 @@ export const getAllContacts = async ({
 
   // ================================ Second Варіант ================================
 
+  // const contactQury = StudentCollections.find({ userId });
+
   const contactQury = StudentCollections.find();
 
-  contactQury.where('userId').equals(userId);
+  contactQury.where('userId').equals(new mongoose.Types.ObjectId(userId));
 
   if (filter.isFavourite !== undefined) {
     contactQury.where('isFavourite').equals(filter.isFavourite);
@@ -42,7 +45,7 @@ export const getAllContacts = async ({
     contactQury.where('contactType').equals(filter.contactType);
   }
 
-  const countFilter = {};
+  const countFilter = { userId: new mongoose.Types.ObjectId(userId) };
 
   if (filter.isFavourite !== undefined) {
     countFilter.isFavourite = filter.isFavourite;
@@ -86,6 +89,21 @@ export const getAllContacts = async ({
 
   // console.log({ totalItems, data });
   const totalPages = Math.ceil(totalItems / perPage);
+  // const currentPage = Math.min(page, totalPages || 1);
+  // const hasNextPage = Boolean(totalPages - page);
+  // const hasPreviousPage = page !== 1;
+
+  // return {
+  //   data,
+  //   page: currentPage,
+  //   perPage,
+  //   totalItems,
+  //   totalPages,
+  //   hasNextPage: currentPage < totalPages,
+  //   hasPreviousPage: currentPage > 1,
+  // };
+  const allContacts = await StudentCollections.find();
+  console.log('All contacts in DB:', allContacts);
 
   return {
     data,
@@ -98,8 +116,12 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = async (contactId) => {
-  const contact = await StudentCollections.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  const contact = await StudentCollections.findOne({
+    _id: contactId,
+    userId: new mongoose.Types.ObjectId(userId),
+  });
+  console.log('Searching contact with ID:', contactId, 'and userId:', userId);
   return contact;
 };
 
@@ -107,14 +129,18 @@ export const createContact = async (payload) => {
   return await StudentCollections.create(payload);
 };
 
-export const updateContact = async (contactId, payload) => {
-  return await StudentCollections.findByIdAndUpdate(contactId, payload, {
-    new: true,
-  });
+export const updateContact = async (contactId, userId, payload) => {
+  return await StudentCollections.findOneAndUpdate(
+    { _id: contactId, userId },
+    payload,
+    {
+      new: true,
+    },
+  );
 };
 
-export const deleteContact = async (contactId) => {
-  return await StudentCollections.findByIdAndDelete(contactId);
+export const deleteContact = async (contactId, userId) => {
+  return await StudentCollections.findByIdAndDelete({ _id: contactId, userId });
 };
 
 // ========================== Method PUT =====================================
