@@ -102,8 +102,8 @@ export const getAllContacts = async ({
   //   hasNextPage: currentPage < totalPages,
   //   hasPreviousPage: currentPage > 1,
   // };
-  const allContacts = await StudentCollections.find();
-  console.log('All contacts in DB:', allContacts);
+  // const allContacts = await StudentCollections.find();
+  // console.log('All contacts in DB:', allContacts);
 
   return {
     data,
@@ -140,7 +140,7 @@ export const updateContact = async (contactId, userId, payload) => {
 };
 
 export const deleteContact = async (contactId, userId) => {
-  return await StudentCollections.findByIdAndDelete({ _id: contactId, userId });
+  return await StudentCollections.findOneAndDelete({ _id: contactId, userId });
 };
 
 // ========================== Method PUT =====================================
