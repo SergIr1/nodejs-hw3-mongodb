@@ -9,6 +9,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 // import contactsRouter from './routers/contacts.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
+import { UPLOAD_DIR } from './constans/index.js';
 
 const app = express();
 const PORT = Number(getEnvVar('PORT', '3000'));
@@ -25,6 +26,8 @@ export const setupServer = () => {
       },
     }),
   );
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.get('/', (request, response) => {
     response.json({ message: 'Hello World! My name is Serhii Karskyi' });
@@ -47,6 +50,6 @@ export const setupServer = () => {
       throw err;
     }
 
-    console.log(`Server is running serhii karskiy on port ${PORT}`);
+    console.log(`Server is running Serhii Karskiy on port ${PORT}`);
   });
 };
