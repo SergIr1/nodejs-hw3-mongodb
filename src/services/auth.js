@@ -175,3 +175,28 @@ export const resetPassword = async (payload) => {
     { password: encryptedPassword },
   );
 };
+
+export const loginOrRegister = async (email, name) => {
+  let user = await UserCollection.findOne({ email });
+
+  if (user === null) {
+    const password = await bcrypt.hash(
+      crypto.randomBytes(30).toString('base64'),
+      10,
+    );
+
+    user = await UserCollection.create({ name, email, password });
+  }
+
+  const newSession = createSession();
+
+  console.log('User ID:', user._id);
+  console.log('New session:', newSession);
+
+  await SessionCollection.deleteOne({ userId: user._id });
+
+  return await SessionCollection.create({
+    userId: user._id,
+    ...newSession,
+  });
+};
