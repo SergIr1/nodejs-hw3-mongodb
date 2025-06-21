@@ -1,15 +1,14 @@
 import express from 'express';
-// import 'dotenv/config';
 import cors from 'cors';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
 // import {Serhii Karskyi} from serhiipraktic7@gmail.com;
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-// import contactsRouter from './routers/contacts.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 import { UPLOAD_DIR } from './constans/index.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const app = express();
 const PORT = Number(getEnvVar('PORT', '3000'));
@@ -27,11 +26,12 @@ export const setupServer = () => {
     }),
   );
 
-  app.use('/uploads', express.static(UPLOAD_DIR));
-
   app.get('/', (request, response) => {
     response.json({ message: 'Hello World! My name is Serhii Karskyi' });
   });
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
 
   // app.get('/contacts', getAllContactsController);
 

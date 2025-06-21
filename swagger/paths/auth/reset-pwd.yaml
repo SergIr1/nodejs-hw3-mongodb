@@ -1,0 +1,45 @@
+security: []
+tags:
+  - Auth
+summary: Reset user password
+operationId: resetPassword
+description: Sets a new password using the reset token
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - token
+          - newPassword
+        properties:
+          token:
+            type: string
+            example: reset_token_string
+          newPassword:
+            type: string
+            example: newsecurepassword123
+responses:
+  '200':
+    description: Password updated
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Password has been reset
+  '400':
+    description: Invalid or expired token
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Token is invalid or expired
+  '500':
+    $ref: '../../components/responses/500.yaml'

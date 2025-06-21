@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { StudentCollections } from '../db/models/contact.js';
+import { ContactCollections } from '../db/models/contact.js';
 
 export const getAllContacts = async ({
   page,
@@ -13,15 +13,15 @@ export const getAllContacts = async ({
 
   // ================================ Перший Варіант ================================
 
-  // const contactQeury = StudentCollections.find(filter);
+  // const contactQeury = ContactCollections.find(filter);
 
   // const [totalItems, data] = await Promise.all([
-  //   StudentCollections.countDocuments(filter),
+  //   ContactCollections.countDocuments(filter),
   //   contactQeury
   //     .sort({ [sortBy]: sortOrder })
   //     .skip(skip)
   //     .limit(perPage),
-  //   // await StudentCollections.find()
+  //   // await ContactCollections.find()
   //   //   .sort({ [sortBy]: sortOrder })
   //   //   .skip(skip)
   //   //   .limit(perPage),
@@ -31,9 +31,9 @@ export const getAllContacts = async ({
 
   // ================================ Second Варіант ================================
 
-  // const contactQury = StudentCollections.find({ userId });
+  // const contactQury = ContactCollections.find({ userId });
 
-  const contactQury = StudentCollections.find();
+  const contactQury = ContactCollections.find();
 
   contactQury.where('userId').equals(new mongoose.Types.ObjectId(userId));
 
@@ -56,7 +56,7 @@ export const getAllContacts = async ({
   }
 
   const [totalItems, data] = await Promise.all([
-    StudentCollections.countDocuments(countFilter),
+    ContactCollections.countDocuments(countFilter),
     contactQury
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
@@ -67,7 +67,7 @@ export const getAllContacts = async ({
 
   // ================================ Варіант з ЧИСЛАМИ================================
 
-  // let contactQury = StudentCollections.find();
+  // let contactQury = ContactCollections.find();
 
   // if (typeof filter.minYear !== 'undefined') {
   //   contactQury = contactQury.where('minYear').gte(filter.minYear);
@@ -78,7 +78,7 @@ export const getAllContacts = async ({
   // }
 
   // const [totalItems, contacts] = await Promise.all([
-  //   StudentCollections.countDocuments(contactQury),
+  //   ContactCollections.countDocuments(contactQury),
   //   contactQury
   //     .sort({ [sortBy]: sortOrder })
   //     .skip(skip)
@@ -102,7 +102,7 @@ export const getAllContacts = async ({
   //   hasNextPage: currentPage < totalPages,
   //   hasPreviousPage: currentPage > 1,
   // };
-  // const allContacts = await StudentCollections.find();
+  // const allContacts = await ContactCollections.find();
   // console.log('All contacts in DB:', allContacts);
 
   return {
@@ -117,7 +117,7 @@ export const getAllContacts = async ({
 };
 
 export const getContactById = async (contactId, userId) => {
-  const contact = await StudentCollections.findOne({
+  const contact = await ContactCollections.findOne({
     _id: contactId,
     userId: new mongoose.Types.ObjectId(userId),
   });
@@ -126,11 +126,11 @@ export const getContactById = async (contactId, userId) => {
 };
 
 export const createContact = async (payload) => {
-  return await StudentCollections.create(payload);
+  return await ContactCollections.create(payload);
 };
 
 export const updateContact = async (contactId, userId, payload) => {
-  return await StudentCollections.findOneAndUpdate(
+  return await ContactCollections.findOneAndUpdate(
     { _id: contactId, userId },
     payload,
     {
@@ -140,13 +140,13 @@ export const updateContact = async (contactId, userId, payload) => {
 };
 
 export const deleteContact = async (contactId, userId) => {
-  return await StudentCollections.findOneAndDelete({ _id: contactId, userId });
+  return await ContactCollections.findOneAndDelete({ _id: contactId, userId });
 };
 
 // ========================== Method PUT =====================================
 
 // export const replaceContact = async (contactId, contact) => {
-//   const result = await StudentCollections.findByIdAndUpdate(
+//   const result = await ContactCollections.findByIdAndUpdate(
 //     contactId,
 //     contact,
 //     {

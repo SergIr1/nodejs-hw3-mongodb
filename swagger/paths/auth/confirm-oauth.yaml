@@ -1,0 +1,33 @@
+security: []
+tags:
+  - Auth
+summary: Confirm Google OAuth login
+operationId: confirmGoogleOAuth
+description: Confirms Google login using provided code
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - code
+        properties:
+          code:
+            type: string
+            example: '4/0AX4XfWh_abcdefghijklmno'
+responses:
+  '200':
+    description: OAuth login successful
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'
