@@ -13,8 +13,8 @@ tags:
     description: Auth operations.
   # теги, що ви будете використовувати
 servers:
-  - url: http://127.0.0.1:3000
   - url: https://nodejs-hw3-mongodb-h2y8.onrender.com
+  - url: http://127.0.0.1:3000
 paths:
   /contacts/{id}:
     get:
